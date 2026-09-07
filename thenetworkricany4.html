@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="cs" class="scroll-smooth">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Network Říčany | Změň svoji budoucnost</title>
+<meta name="description" content="Projektová platforma v Říčanech pro studenty od 8. třídy ZŠ a výš. Realizuj vlastní nápady, změň svoji budoucnost a potkej experty.">
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "background": "var(--bg-body)",
+                    "surface": "var(--surface)",
+                    "surface-alt": "var(--surface-alt)",
+                    "on-surface-variant": "var(--text-muted)"
+                },
+                fontFamily: {
+                    "sans": ["Roboto", "sans-serif"]
+                }
+            }
+        }
+    }
+</script>
+
+<script>
+    (function() {
+        const storedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (storedTheme === 'dark' || (!storedTheme && systemPrefersDark)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    })();
+</script>
+
+<style>
+    :root {
+        --bg-body: #f8fafc;
+        --surface: #ffffff;
+        --surface-alt: #f1f5f9;
+        --border: rgba(15, 23, 42, 0.10);
+        --text-main: #0f172a;
+        --text-muted: #56617a;
+        --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 28px -16px rgba(15, 23, 42, 0.16);
+        --nav-bg: rgba(255, 255, 255, 0.92);
+        --kolobeh-filter: invert(1);
+        --sim-accent: #2563eb;
+        --sim-accent-text: #ffffff;
+        --sim-dot-off: #e2e8f0;
+        --sim-dot-off-text: #94a3b8;
+        --sim-glow: rgba(37, 99, 235, 0.55);
+        --sim-tone-join: rgba(37, 99, 235, 0.35);
+        --sim-tone-stay: rgba(100, 116, 139, 0.35);
+    }
+
+    html.dark {
+        --bg-body: #05070f;
+        --surface: #0c1226;
+        --surface-alt: #0a0e1f;
+        --border: rgba(255, 255, 255, 0.09);
+        --text-main: #f1f5f9;
+        --text-muted: #94a3b8;
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 16px 32px -16px rgba(0, 0, 0, 0.6);
+        --nav-bg: rgba(5, 7, 15, 0.86);
+        --kolobeh-filter: none;
+        --sim-accent: #38bdf8;
+        --sim-accent-text: #02121f;
+        --sim-dot-off: rgba(255, 255, 255, 0.1);
+        --sim-dot-off-text: #64748b;
+        --sim-glow: rgba(56, 189, 248, 0.55);
+        --sim-tone-join: rgba(56, 189, 248, 0.4);
+        --sim-tone-stay: rgba(148, 163, 184, 0.35);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        font-family: 'Roboto', sans-serif !important;
+    }
+
+    .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+    }
+
+    .site-header {
+        background: var(--nav-bg);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .btn-primary {
+        background: #2563eb;
+        color: #fff;
+        transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+    .btn-primary:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-main);
+        transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .btn-secondary:hover {
+        border-color: #2563eb;
+        transform: translateY(-1px);
+    }
+    html.dark .btn-secondary:hover {
+        border-color: #38bdf8;
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border-radius: 9999px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        padding: 0.35rem 0.85rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #1d4ed8;
+    }
+    html.dark .eyebrow {
+        color: #7dd3fc;
+    }
+
+    .kolobeh-logo-svg {
+        filter: var(--kolobeh-filter);
+    }
+
+    .hero-glow {
+        position: absolute;
+        top: -10%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60vw;
+        max-width: 760px;
+        height: 60vw;
+        max-height: 760px;
+        background: radial-gradient(circle, rgba(37, 99, 235, 0.18) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    #networkCanvas {
+        touch-action: none;
+    }
+
+    @keyframes subtleFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-6px); }
+    }
+    .anim-float-1 { animation: subtleFloat 6s ease-in-out infinite; }
+    .anim-float-2 { animation: subtleFloat 6s ease-in-out infinite 1.2s; }
+
+    @keyframes simStepPulse {
+        0%, 100% { box-shadow: 0 0 0 0 var(--sim-glow); }
+        50% { box-shadow: 0 0 0 6px transparent; }
+    }
+    .sim-step-current {
+        animation: simStepPulse 1.7s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .sim-step-current { animation: none; box-shadow: 0 0 0 4px var(--sim-glow); }
+    }
+</style>
+</head>
+<body class="min-h-screen selection:bg-blue-500 selection:text-white">
+
+<header class="site-header sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto flex items-center justify-between gap-3 px-5 sm:px-8 lg:px-10 py-4">
+    <a href="#hero" class="flex items-center gap-2.5 min-w-0 shrink-0" aria-label="The Network home">
+      <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-sm text-white shrink-0">
+        TN
+      </div>
+      <span class="font-bold text-sm sm:text-base tracking-tight whitespace-nowrap">
+        The Network<span class="text-blue-600 dark:text-cyan-400">.</span>
+      </span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-6" aria-label="Primary">
+      <a href="#hero" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white transition-colors">Úvod</a>
+      <a href="#myslenka" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white transition-colors">O co jde</a>
+      <a href="#partneri" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white transition-colors">Záštita &amp; Partneři</a>
+      <a href="#hoste" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white transition-colors">Hosté</a>
+      <a href="#simulator" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white transition-colors">Simulátor</a>
+      <a href="#faq" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white transition-colors">Dotazy</a>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+      <a href="https://instagram.com/the_network_ricany" target="_blank" aria-label="Instagram" class="p-2 rounded-full border border-slate-300/60 dark:border-white/15 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors flex items-center justify-center">
+        <iconify-icon icon="simple-icons:instagram" width="16"></iconify-icon>
+      </a>
+
+      <button id="themeToggle" class="p-2 rounded-full border border-slate-300/60 dark:border-white/15 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors flex items-center justify-center" aria-label="Přepnout motiv">
+        <iconify-icon id="themeIconDark" icon="solar:sun-linear" width="18" class="hidden dark:block"></iconify-icon>
+        <iconify-icon id="themeIconLight" icon="solar:moon-linear" width="18" class="block dark:hidden"></iconify-icon>
+      </button>
+
+      <a href="https://tally.so/r/yP8Zp4" target="_blank" class="hidden sm:inline-flex btn-primary items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold whitespace-nowrap">
+        Podat přihlášku
+        <iconify-icon icon="solar:arrow-right-up-linear" width="14"></iconify-icon>
+      </a>
+
+      <button id="menuToggle" class="lg:hidden p-2 rounded-full border border-slate-300/60 dark:border-white/15 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors flex items-center justify-center" aria-label="Otevřít menu" aria-expanded="false" aria-controls="mobileMenu">
+        <iconify-icon id="menuIconOpen" icon="solar:hamburger-menu-linear" width="20"></iconify-icon>
+        <iconify-icon id="menuIconClose" icon="solar:close-square-linear" width="20" class="hidden"></iconify-icon>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden lg:hidden border-t border-[var(--border)]">
+    <nav class="max-w-6xl mx-auto flex flex-col px-5 sm:px-8 py-3" aria-label="Mobilní menu">
+      <a href="#hero" class="py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Úvod</a>
+      <a href="#myslenka" class="py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">O co jde</a>
+      <a href="#partneri" class="py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Záštita &amp; Partneři</a>
+      <a href="#hoste" class="py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Hosté</a>
+      <a href="#simulator" class="py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Simulátor</a>
+      <a href="#faq" class="py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Dotazy</a>
+      <a href="https://tally.so/r/yP8Zp4" target="_blank" class="btn-primary sm:hidden mt-3 inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-xs font-bold">
+        Podat přihlášku
+        <iconify-icon icon="solar:arrow-right-up-linear" width="14"></iconify-icon>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section id="hero" class="relative overflow-hidden">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="relative z-10 max-w-6xl mx-auto grid lg:grid-cols-12 gap-12 items-center px-5 sm:px-8 lg:px-10 pt-16 lg:pt-24 pb-16 lg:pb-24">
+
+      <div class="lg:col-span-6 max-w-xl text-center lg:text-left mx-auto lg:mx-0">
+        <h1 class="text-4xl sm:text-5xl lg:text-[3.2rem] font-black tracking-tight leading-[1.1]">
+          Změň svoji budoucnost.<br/>
+          <span class="text-blue-600 dark:text-cyan-400">Stavěj reálné věci.</span>
+        </h1>
+
+        <p class="mt-6 text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+          The Network ti otevírá dveře k tomu, co tě škola nenaučí. Vybuduj silné portfolio, dostaň se na výběrové školy i stáže a potkávej exkluzivní hosty z byznysu a technologií přímo u jednoho stolu.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-3.5">
+          <a href="https://tally.so/r/yP8Zp4" target="_blank" class="btn-primary inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-bold">
+            Vyplnit přihlášku <span class="opacity-75 font-normal">(2 min)</span>
+            <iconify-icon icon="solar:arrow-right-up-linear" width="15"></iconify-icon>
+          </a>
+          <a href="#myslenka" class="btn-secondary inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-bold">
+            Jak to funguje
+          </a>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mt-10 pt-6 border-t border-[var(--border)] w-full">
+          <div class="card p-3 rounded-xl text-center">
+            <p class="text-[10px] uppercase font-bold tracking-wide text-blue-600 dark:text-cyan-400">Cílovka</p>
+            <p class="text-sm font-bold mt-1">8. třída+</p>
+          </div>
+          <div class="card p-3 rounded-xl text-center">
+            <p class="text-[10px] uppercase font-bold tracking-wide text-blue-600 dark:text-cyan-400">Frekvence</p>
+            <p class="text-sm font-bold mt-1">1× za 14 dní</p>
+          </div>
+          <div class="card p-3 rounded-xl text-center">
+            <p class="text-[10px] uppercase font-bold tracking-wide text-blue-600 dark:text-cyan-400">Účast</p>
+            <p class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-1">0 Kč (Zdarma)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-6 relative h-[360px] sm:h-[420px] lg:h-[460px] w-full">
+        <div class="absolute inset-0 rounded-3xl card overflow-hidden">
+          <canvas id="networkCanvas" class="absolute inset-0 w-full h-full" aria-hidden="true"></canvas>
+          <span class="absolute bottom-3 right-4 text-[10px] uppercase tracking-wide font-medium text-slate-400 dark:text-slate-500 pointer-events-none select-none">
+            Pohni myší · klikni
+          </span>
+        </div>
+
+        <div class="anim-float-1 hidden sm:flex absolute -top-4 right-2 sm:right-6 card px-4 py-3 rounded-2xl items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white flex-shrink-0">
+            <iconify-icon icon="solar:user-speak-rounded-linear" width="17"></iconify-icon>
+          </div>
+          <div>
+            <p class="text-xs font-bold">Patrik Jíra</p>
+            <p class="text-[11px] text-blue-600 dark:text-cyan-400 font-medium">Tech Lead &amp; CTO // Host</p>
+          </div>
+        </div>
+
+        <div class="anim-float-2 hidden sm:flex absolute -bottom-4 left-2 sm:left-6 card px-4 py-3 rounded-2xl items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-cyan-600/10 border border-cyan-600/30 flex items-center justify-center text-cyan-700 dark:text-cyan-400 flex-shrink-0">
+            <iconify-icon icon="solar:map-point-wave-linear" width="17"></iconify-icon>
+          </div>
+          <div>
+            <p class="text-xs font-bold">Lázeňská 9, Říčany</p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">Komunitní prostor Dvojka</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="myslenka" class="bg-[var(--surface-alt)] border-t border-[var(--border)]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-16 lg:py-24">
+      <div class="max-w-2xl mx-auto text-center mb-14">
+        <span class="eyebrow mb-4">Cíle platformy</span>
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight leading-tight">
+          Proč The Network vznikl?
+        </h2>
+        <p class="mt-4 text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+          Platformu stavíme na třech hlavních pilířích: posunout studenty na špičkové školy, otevřít přímý kontakt s mentory z praxe a naučit týmovou exekuci reálných projektů.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card p-7 rounded-2xl">
+          <div class="w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-600/25 text-blue-600 dark:text-cyan-400 flex items-center justify-center mb-5">
+            <iconify-icon icon="solar:square-academic-cap-linear" width="22"></iconify-icon>
+          </div>
+          <h3 class="text-lg font-bold mb-2.5 tracking-tight">Dostat se na lepší školy</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            Školní známky dnes na výběrových oborech nikoho neohromí. Vybuduješ hmatatelný projekt od A do Z, se kterým vynikneš u přijímaček i na stážích.
+          </p>
+        </div>
+
+        <div class="card p-7 rounded-2xl">
+          <div class="w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-600/25 text-blue-600 dark:text-cyan-400 flex items-center justify-center mb-5">
+            <iconify-icon icon="solar:chat-round-dots-linear" width="22"></iconify-icon>
+          </div>
+          <h3 class="text-lg font-bold mb-2.5 tracking-tight">Exkluzivní hosté z byznysu</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            Pravidelná setkání formou kulatého stolu se špičkovými experty z technologií, managementu a veřejné sféry. Přímý kontakt bez bariér a přednáškových aul.
+          </p>
+        </div>
+
+        <div class="card p-7 rounded-2xl sm:col-span-2 lg:col-span-1">
+          <div class="w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-600/25 text-blue-600 dark:text-cyan-400 flex items-center justify-center mb-5">
+            <iconify-icon icon="solar:users-group-rounded-linear" width="22"></iconify-icon>
+          </div>
+          <h3 class="text-lg font-bold mb-2.5 tracking-tight">Týmy, které skutečně fungují</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            Konec školních referátů, kde jeden člověk nespí a zbytek se veze. Dáváme dohromady studenty, kteří chtějí makat a mít reálné výsledky.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="partneri" class="border-t border-[var(--border)]">
+    <div class="max-w-5xl mx-auto px-5 sm:px-8 lg:px-10 py-16 lg:py-24 space-y-14">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-7 card p-8 md:p-10 rounded-2xl">
+          <span class="block text-4xl font-serif text-blue-600/40 dark:text-cyan-400/40 leading-none mb-3" aria-hidden="true">&ldquo;</span>
+          <p class="text-lg md:text-xl font-medium leading-relaxed mb-6">
+            Mám velkou radost z iniciativy mladých lidí v Říčanech. Věřím, že The Network dá studentům skvělý prostor realizovat vlastní nápady.
+          </p>
+          <div class="flex items-center gap-3.5 border-t border-[var(--border)] pt-4">
+            <div class="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">
+              HŠ
+            </div>
+            <div>
+              <p class="text-sm font-bold">Mgr. Hana Špačková</p>
+              <p class="text-xs text-blue-600 dark:text-cyan-400 font-medium">Místostarostka města Říčany</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-3">
+          <p class="text-blue-600 dark:text-cyan-400 uppercase tracking-wide text-[11px] font-bold mb-3">Kdo za platformou stojí</p>
+          <div class="card p-4 rounded-xl">
+            <p class="font-bold text-sm">Lukáš Texl</p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Zakladatel &amp; Koordinátor // Open Gate</p>
+          </div>
+          <div class="card p-4 rounded-xl">
+            <p class="font-bold text-sm">Mgr. Hana Špačková</p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Místostarostka města Říčany // Oficiální záštita</p>
+          </div>
+          <div class="card p-4 rounded-xl">
+            <p class="font-bold text-sm">Ing. Eva Návorková Vejvodová</p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Ředitelka Koloběhu // Nový prostor Dvojka</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-[var(--border)] pt-10">
+        <p class="text-center text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-6">
+          Klíčoví partneři projektu
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+
+          <div class="flex flex-col items-center justify-center p-6 rounded-2xl card">
+            <svg viewBox="0 0 950 300" class="w-48 h-auto max-h-12 kolobeh-logo-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 40V220M50 130L125 40M75 110L135 220" stroke="white" stroke-width="8" stroke-linecap="square"/>
+              <ellipse cx="200" cy="130" rx="48" ry="85" stroke="white" stroke-width="8"/>
+              <path d="M290 40V220H365" stroke="white" stroke-width="8" stroke-linecap="square"/>
+              <ellipse cx="440" cy="130" rx="68" ry="85" stroke="white" stroke-width="8"/>
+              <path d="M410 55C470 50 515 95 505 155" stroke="white" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+              <path d="M550 40V220M550 40H600C625 40 640 58 640 82C640 106 625 125 600 125H550M550 125H605C632 125 650 145 650 172C650 198 632 220 605 220H550" stroke="white" stroke-width="8" stroke-linecap="square"/>
+              <path d="M685 40V220H760M685 40H755M685 130H740" stroke="white" stroke-width="8" stroke-linecap="square"/>
+              <path d="M705 15L722 30L740 15" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M800 40V220M885 40V220M800 130H885" stroke="white" stroke-width="8" stroke-linecap="square"/>
+              <text x="475" y="275" font-family="'Roboto', sans-serif" font-size="28" font-weight="500" fill="white" letter-spacing="12" text-anchor="middle">
+                ŘÍČANY • PŘÍSPĚVKOVÁ ORGANIZACE
+              </text>
+            </svg>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400 mt-3 font-medium">Zázemí Dvojka (Lázeňská 9)</span>
+          </div>
+
+          <div class="flex flex-col items-center justify-center p-6 rounded-2xl card">
+            <div class="flex items-center gap-3.5">
+              <svg viewBox="0 0 100 100" class="w-11 h-11 flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 50 25 L 43 15.5 C 19 19, 0 39, 0 63 C 0 89, 22 110, 50 110 C 78 110, 100 89, 100 63 C 100 39, 81 19, 57 15.5 Z" fill="#65A30D" transform="translate(0, -10)" />
+                <text x="50" y="66" font-family="'Roboto', sans-serif" font-size="44" font-weight="900" fill="white" text-anchor="middle">R</text>
+              </svg>
+              <div class="text-left">
+                <p class="text-base font-bold uppercase tracking-wide">Město Říčany</p>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-medium">Oficiální záštita &amp; podpora</p>
+              </div>
+            </div>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400 mt-3 font-medium">Institucionální podpora</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="hoste" class="bg-[var(--surface-alt)] border-t border-[var(--border)]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-16 lg:py-24">
+      <div class="max-w-2xl mx-auto text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight">
+          Exkluzivní hosté u kulatého stolu
+        </h2>
+        <p class="mt-3 text-base text-slate-600 dark:text-slate-400">
+          Přímá diskuse a předávání zkušeností s lídry v technologiích a podnikání.
+        </p>
+      </div>
+
+      <div class="max-w-xl mx-auto card p-8 rounded-2xl">
+        <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-6">
+          <span class="text-xs font-bold text-blue-600 dark:text-cyan-400 uppercase tracking-wide">Potvrzený host u stolu</span>
+          <span class="text-xs text-slate-500 dark:text-slate-400 uppercase font-medium tracking-wide">Přímá diskuse</span>
+        </div>
+        <h3 class="text-2xl font-black tracking-tight">Patrik Jíra</h3>
+        <p class="text-sm text-blue-600 dark:text-cyan-400 font-bold mt-1">Tech Lead &amp; CTO</p>
+        <p class="text-sm text-slate-600 dark:text-slate-300 mt-4 leading-relaxed">
+          Téma setkání: Vedení softwarových týmů, spouštění digitálních produktů od nuly a cesta od studentských nápadů k reálným technologickým firmám.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="simulator" class="border-t border-[var(--border)]">
+    <div class="max-w-3xl mx-auto px-5 sm:px-8 lg:px-10 py-16 lg:py-24">
+      <div class="max-w-2xl mx-auto text-center mb-10">
+        <span class="eyebrow mb-4">Vyzkoušej si to nanečisto</span>
+        <h2 class="text-3xl sm:text-4xl font-black tracking-tight leading-tight">
+          Simulátor: Život s The Network
+        </h2>
+        <p class="mt-4 text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+          Jedno rozhodnutí, jeden příběh. Vyber si a podívej se, kam až může vést.
+        </p>
+      </div>
+
+      <div id="simCard" class="card rounded-3xl p-6 sm:p-10" style="transition: border-color 0.4s ease;">
+        <div class="flex items-center justify-between gap-3 mb-1">
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+            <iconify-icon id="simIcon" icon="solar:user-rounded-linear" width="16"></iconify-icon>
+            <span id="simStepLabel">Rozhodni se</span>
+          </div>
+          <button id="simRestartTop" type="button" class="hidden text-xs font-bold text-blue-600 dark:text-cyan-400 hover:underline">
+            Začít znovu
+          </button>
+        </div>
+
+        <div class="relative h-20 sm:h-24 mb-5" id="simRouteWrap">
+          <svg viewBox="0 0 300 70" preserveAspectRatio="none" class="absolute inset-0 w-full h-full" aria-hidden="true">
+            <path d="M20,50 L85,18 L150,50 L215,18 L280,50" fill="none" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 10" style="stroke: var(--sim-dot-off);"></path>
+            <path id="simRouteProgress" d="M20,50 L85,18 L150,50 L215,18 L280,50" fill="none" stroke-width="3" stroke-linecap="round" style="stroke: var(--sim-accent); transition: stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1), stroke 0.4s ease;"></path>
+          </svg>
+          <div id="simTimeline" class="absolute inset-0" aria-hidden="true"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-7">
+          <div>
+            <div class="flex items-center justify-between text-[10px] sm:text-[11px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1.5">
+              <span>Zkušenosti</span>
+              <span id="statExpVal">20&nbsp;%</span>
+            </div>
+            <div class="h-1.5 rounded-full bg-slate-200 dark:bg-white/10 overflow-hidden">
+              <div id="statExpBar" class="h-full rounded-full" style="width:20%; background:var(--sim-accent); transition: width 0.6s cubic-bezier(.4,0,.2,1);"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between text-[10px] sm:text-[11px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1.5">
+              <span>Kontakty</span>
+              <span id="statNetVal">20&nbsp;%</span>
+            </div>
+            <div class="h-1.5 rounded-full bg-slate-200 dark:bg-white/10 overflow-hidden">
+              <div id="statNetBar" class="h-full rounded-full" style="width:20%; background:var(--sim-accent); transition: width 0.6s cubic-bezier(.4,0,.2,1);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="simPanel" style="min-height:9.5rem; cursor: default;">
+          <h3 id="simTitle" class="text-xl sm:text-2xl font-bold mb-3 tracking-tight"></h3>
+          <p id="simText" class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-8 min-h-[4.5em]"></p>
+          <div id="simChoices" class="flex flex-col sm:flex-row gap-3" style="min-height:3.25rem; opacity:0; transition: opacity 0.3s ease;"></div>
+        </div>
+      </div>
+      <p class="text-center text-[11px] text-slate-400 dark:text-slate-500 mt-3">
+        Klepnutím do rámečku přeskočíš psaní textu.
+      </p>
+    </div>
+  </section>
+
+  <section id="faq" class="border-t border-[var(--border)]">
+    <div class="max-w-3xl mx-auto px-5 sm:px-8 lg:px-10 py-16 lg:py-24">
+      <h2 class="text-3xl sm:text-4xl font-black text-center mb-12">
+        Často kladené dotazy
+      </h2>
+      <div class="space-y-4">
+        <div class="card p-6 rounded-xl">
+          <h4 class="text-base font-bold mb-2">Platí se za účast v The Network?</h4>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            Ne, účast v programu je díky podpoře města Říčany a partnerům pro všechny vybrané studenty <strong>zcela zdarma</strong>.
+          </p>
+        </div>
+        <div class="card p-6 rounded-xl">
+          <h4 class="text-base font-bold mb-2">Dá se to stíhat se školou a kroužky?</h4>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            Ano. Setkáváme se pouze 1× za 14 dní na 90 minut. Formát je vytvořený tak, aby ti nepřekážel v přípravě na zkoušky ani při sportu.
+          </p>
+        </div>
+        <div class="card p-6 rounded-xl">
+          <h4 class="text-base font-bold mb-2">Musím mít předem hotový nápad na projekt?</h4>
+          <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            Vůbec ne. Důležitá je motivace a chuť tvořit v týmu. Nápady vymýšlíme a filtrujeme společně na úvodních setkáních.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta" class="bg-[var(--surface-alt)] border-t border-[var(--border)] text-center">
+    <div class="max-w-2xl mx-auto px-5 sm:px-8 lg:px-10 py-20">
+      <h2 class="text-3xl sm:text-5xl font-black tracking-tight mb-6 leading-tight">
+        Kapacita je omezena na
+        <span class="text-blue-600 dark:text-cyan-400">kapacitu stolu.</span>
+      </h2>
+      <p class="text-base md:text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
+        Aby měla diskuse s hosty i práce na projektech maximální přínos, přijímáme jen tolik studentů, kolik se vejde k jednomu stolu.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="https://tally.so/r/yP8Zp4" target="_blank" class="btn-primary inline-flex items-center justify-center gap-2 rounded-lg px-8 py-3.5 text-sm font-bold">
+          Vyplnit přihlášku
+          <iconify-icon icon="solar:arrow-right-up-linear" width="16"></iconify-icon>
+        </a>
+        <a href="mailto:thenetworkricany@gmail.com" class="btn-secondary inline-flex items-center justify-center gap-2 rounded-lg px-8 py-3.5 text-sm font-bold">
+          thenetworkricany@gmail.com
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-[var(--border)]">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6 text-xs text-slate-500 dark:text-slate-400 px-5 sm:px-8 lg:px-10 py-10">
+    <div>
+      <span class="font-bold text-slate-900 dark:text-white">The Network Říčany</span>
+      <span class="mx-2">•</span>
+      <span>© 2026. Ve spolupráci s Koloběh Říčany a Město Říčany.</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <a class="hover:text-blue-600 dark:hover:text-white transition-colors" href="https://instagram.com/the_network_ricany" target="_blank">Instagram</a>
+      <a class="hover:text-blue-600 dark:hover:text-white transition-colors" href="mailto:thenetworkricany@gmail.com">E-mail</a>
+      <a class="hover:text-blue-600 dark:hover:text-white transition-colors" href="https://tally.so/r/yP8Zp4" target="_blank">Přihláška</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const themeToggleBtn = document.getElementById('themeToggle');
+  function updateThemeUI(isDark) {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      updateThemeUI(!isDark);
+    });
+  }
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('theme')) {
+      updateThemeUI(e.matches);
+    }
+  });
+
+  // ---------- Mobile menu ----------
+  const menuToggleBtn = document.getElementById('menuToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuIconOpen = document.getElementById('menuIconOpen');
+  const menuIconClose = document.getElementById('menuIconClose');
+
+  function setMenuOpen(open) {
+    mobileMenu.classList.toggle('hidden', !open);
+    menuIconOpen.classList.toggle('hidden', open);
+    menuIconClose.classList.toggle('hidden', !open);
+    menuToggleBtn.setAttribute('aria-expanded', String(open));
+  }
+
+  if (menuToggleBtn && mobileMenu) {
+    menuToggleBtn.addEventListener('click', () => {
+      setMenuOpen(mobileMenu.classList.contains('hidden'));
+    });
+
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setMenuOpen(false));
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) setMenuOpen(false);
+    }, { passive: true });
+  }
+
+  // ---------- Life simulator ----------
+  (function () {
+    const cardEl = document.getElementById('simCard');
+    const panelEl = document.getElementById('simPanel');
+    const titleEl = document.getElementById('simTitle');
+    const textEl = document.getElementById('simText');
+    const choicesEl = document.getElementById('simChoices');
+    const stepLabelEl = document.getElementById('simStepLabel');
+    const iconEl = document.getElementById('simIcon');
+    const restartTopBtn = document.getElementById('simRestartTop');
+    const timelineEl = document.getElementById('simTimeline');
+    const statExpBar = document.getElementById('statExpBar');
+    const statNetBar = document.getElementById('statNetBar');
+    const statExpVal = document.getElementById('statExpVal');
+    const statNetVal = document.getElementById('statNetVal');
+    if (!panelEl) return;
+
+    const APPLY_URL = 'https://tally.so/r/yP8Zp4';
+    const STEP_LABELS = ['Dnes', '+14 dní', '+pár týdnů', 'Přijímačky', '+1 rok'];
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const scenes = {
+      intro: {
+        label: 'Rozhodni se', icon: 'solar:user-rounded-linear', step: 0, tone: 'neutral',
+        stats: { exp: 20, net: 20 },
+        title: 'Jsi v 8. třídě a právě jsi dostal/a pozvánku do The Network.',
+        text: 'Skupina studentů se schází jednou za 14 dní, staví vlastní projekty a potkává lidi z byznysu. Máš dvě možnosti.',
+        choices: [
+          { label: 'Přidat se do The Network', next: 'join1', style: 'primary' },
+          { label: 'Zůstat u toho, na co jsem zvyklý/á', next: 'stay1', style: 'secondary' }
+        ]
+      },
+      join1: {
+        label: 'Příběh pokračuje', icon: 'solar:calendar-linear', step: 1, tone: 'join',
+        stats: { exp: 25, net: 48 },
+        title: 'O 14 dní později',
+        text: 'Sedíš u stolu se studenty, které jsi do teď nepotkal/a — a je jich víc, než jsi čekal/a — a s hostem, který vede vlastní tým. Poprvé nejsi ten/ta, kdo jen poslouchá.',
+        choices: [
+          { label: 'Zapoj se do diskuze', next: 'join2', style: 'primary' },
+          { label: 'Radši jen poslouchej', next: 'join2quiet', style: 'secondary' }
+        ]
+      },
+      join2quiet: {
+        label: 'Příběh pokračuje', icon: 'solar:lightbulb-bolt-linear', step: 2, tone: 'join',
+        stats: { exp: 55, net: 50 },
+        title: 'O pár týdnů později',
+        text: 'Zpočátku jsi jen poslouchal/a — ale i tak sis odnesl/a nápad na vlastní projekt. Rozjíždíš ho a poprvé ho táhneš od začátku do konce.',
+        choices: [{ label: 'Pokračovat', next: 'join3', style: 'primary' }]
+      },
+      join2: {
+        label: 'Příběh pokračuje', icon: 'solar:lightbulb-bolt-linear', step: 2, tone: 'join',
+        stats: { exp: 58, net: 62 },
+        title: 'O pár týdnů později',
+        text: 'Máš vlastní projekt a poprvé ho táhneš od nápadu až po něco, co reálně funguje. Někdy to drhne — ale vždycky je někdo, koho se zeptat.',
+        choices: [{ label: 'Pokračovat', next: 'join3', style: 'primary' }]
+      },
+      join3: {
+        label: 'Příběh pokračuje', icon: 'solar:square-academic-cap-linear', step: 3, tone: 'join',
+        stats: { exp: 78, net: 70 },
+        title: 'U přijímaček na střední',
+        text: 'Místo prázdné kolonky „zkušenosti“ najednou máš co ukázat. Lidi se ptají, jak jsi na to přišel/a.',
+        choices: [{ label: 'Pokračovat', next: 'joinEnd', style: 'primary' }]
+      },
+      joinEnd: {
+        label: 'O rok později', icon: 'solar:medal-star-linear', step: 4, tone: 'join', ending: 'good',
+        stats: { exp: 92, net: 88 },
+        title: 'O rok později',
+        text: 'Máš za sebou reálný projekt, síť lidí, na které se můžeš obrátit, a jasnější představu, co chceš dělat dál. Nezačalo to velkým plánem — začalo to jedním rozhodnutím.',
+        choices: [
+          { label: 'Chci to samé — podat přihlášku', href: APPLY_URL, style: 'primary' },
+          { label: 'Zkusit znovu', next: 'intro', style: 'secondary' }
+        ]
+      },
+      stay1: {
+        label: 'Příběh pokračuje', icon: 'solar:clock-circle-linear', step: 1, tone: 'stay',
+        stats: { exp: 20, net: 23 },
+        title: 'O 14 dní později',
+        text: 'Pozvánku necháváš zaváto v telefonu. Řekneš si, že na to teď není čas.',
+        choices: [
+          { label: 'A možná příště', next: 'stay2', style: 'primary' },
+          { label: 'Radši si to ještě rozmyslet', next: 'stay2think', style: 'secondary' }
+        ]
+      },
+      stay2think: {
+        label: 'Příběh pokračuje', icon: 'solar:clock-circle-linear', step: 2, tone: 'stay',
+        stats: { exp: 22, net: 24 },
+        title: 'O pár týdnů později',
+        text: 'Pozvánka pořád leží v telefonu jako nepřečtená notifikace. Rozmýšlíš se dál — a mezitím čas prostě běží.',
+        choices: [{ label: 'Pokračovat', next: 'stay3', style: 'primary' }]
+      },
+      stay2: {
+        label: 'Příběh pokračuje', icon: 'solar:clock-circle-linear', step: 2, tone: 'stay',
+        stats: { exp: 24, net: 24 },
+        title: 'O pár týdnů později',
+        text: 'Dny ubíhají stejným tempem — škola, telefon, občas nuda. Nic dramatického se neděje. Nic se ani nemění.',
+        choices: [{ label: 'Pokračovat', next: 'stay3', style: 'primary' }]
+      },
+      stay3: {
+        label: 'Příběh pokračuje', icon: 'solar:document-linear', step: 3, tone: 'stay',
+        stats: { exp: 26, net: 27 },
+        title: 'U přijímaček na střední',
+        text: 'Píšeš životopis a chvíli koukáš na prázdné místo u kolonky „projekty“.',
+        choices: [{ label: 'Pokračovat', next: 'stayEnd', style: 'primary' }]
+      },
+      stayEnd: {
+        label: 'O rok později', icon: 'solar:hourglass-line-linear', step: 4, tone: 'stay', ending: 'neutral',
+        stats: { exp: 27, net: 28 },
+        title: 'O rok později',
+        text: 'Nic se nestalo — ale nic se ani nezměnilo. Ta pozvánka pořád někde je. Možná příště?',
+        choices: [
+          { label: 'Přidat se teď — podat přihlášku', href: APPLY_URL, style: 'primary' },
+          { label: 'Zkusit znovu', next: 'intro', style: 'secondary' }
+        ]
+      }
+    };
+
+    // Route: a winding path with icon waypoints and a self-drawing progress line
+    const ROUTE_POINTS = [[20, 50], [85, 18], [150, 50], [215, 18], [280, 50]];
+    const ROUTE_ICONS = [
+      'solar:user-rounded-linear',
+      'solar:calendar-linear',
+      'solar:lightbulb-bolt-linear',
+      'solar:square-academic-cap-linear',
+      'solar:hourglass-line-linear'
+    ];
+    const routeProgressPath = document.getElementById('simRouteProgress');
+    const routeLen = routeProgressPath.getTotalLength();
+    routeProgressPath.style.strokeDasharray = String(routeLen);
+    routeProgressPath.style.strokeDashoffset = String(routeLen);
+
+    const waypoints = ROUTE_POINTS.map(([x, y], i) => {
+      const wrap = document.createElement('div');
+      wrap.title = STEP_LABELS[i];
+      wrap.className = 'absolute flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2';
+      wrap.style.left = (x / 300 * 100) + '%';
+      wrap.style.top = (y / 70 * 100) + '%';
+      wrap.style.transform = 'translate(-50%, -50%)';
+      wrap.style.background = 'var(--surface)';
+      wrap.style.borderColor = 'var(--sim-dot-off)';
+      wrap.style.color = 'var(--sim-dot-off-text)';
+      wrap.style.transition = 'background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease, transform 0.35s cubic-bezier(.34,1.56,.64,1)';
+      wrap.innerHTML = '<iconify-icon icon="' + ROUTE_ICONS[i] + '" width="14"></iconify-icon>';
+      timelineEl.appendChild(wrap);
+      return wrap;
+    });
+
+    function updateTimeline(step) {
+      waypoints.forEach((wrap, i) => {
+        const reached = i <= step;
+        wrap.style.background = reached ? 'var(--sim-accent)' : 'var(--surface)';
+        wrap.style.borderColor = reached ? 'var(--sim-accent)' : 'var(--sim-dot-off)';
+        wrap.style.color = reached ? 'var(--sim-accent-text)' : 'var(--sim-dot-off-text)';
+        wrap.style.transform = i === step
+          ? 'translate(-50%, -50%) scale(1.3)'
+          : 'translate(-50%, -50%) scale(1)';
+        wrap.classList.toggle('sim-step-current', i === step);
+      });
+      const frac = step / (STEP_LABELS.length - 1);
+      routeProgressPath.style.strokeDashoffset = String(routeLen * (1 - frac));
+    }
+
+    function updateStats(stats) {
+      statExpBar.style.width = stats.exp + '%';
+      statNetBar.style.width = stats.net + '%';
+      statExpVal.textContent = stats.exp + ' %';
+      statNetVal.textContent = stats.net + ' %';
+    }
+
+    function updateTone(tone) {
+      if (tone === 'join') cardEl.style.borderColor = 'var(--sim-tone-join)';
+      else if (tone === 'stay') cardEl.style.borderColor = 'var(--sim-tone-stay)';
+      else cardEl.style.borderColor = '';
+    }
+
+    function buildChoiceEl(choice) {
+      const classes = choice.style === 'secondary'
+        ? 'btn-secondary inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-bold flex-1'
+        : 'btn-primary inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-bold flex-1';
+
+      if (choice.href) {
+        const a = document.createElement('a');
+        a.href = choice.href;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = choice.label;
+        a.className = classes;
+        return a;
+      }
+
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = choice.label;
+      b.className = classes;
+      b.addEventListener('click', () => render(choice.next));
+      return b;
+    }
+
+    let typingTimer = null;
+    let typingActive = false;
+    let activeScene = null;
+
+    function showChoices(scene) {
+      choicesEl.innerHTML = '';
+      scene.choices.forEach((choice) => choicesEl.appendChild(buildChoiceEl(choice)));
+      window.setTimeout(() => { choicesEl.style.opacity = '1'; }, 20);
+    }
+
+    function finishTyping() {
+      if (typingTimer) { clearInterval(typingTimer); typingTimer = null; }
+      if (!activeScene) return;
+      textEl.textContent = activeScene.text;
+      typingActive = false;
+      showChoices(activeScene);
+    }
+
+    function typeText(scene) {
+      textEl.textContent = '';
+      choicesEl.innerHTML = '';
+      choicesEl.style.transition = 'none';
+      choicesEl.style.opacity = '0';
+
+      if (reduceMotion) {
+        finishTyping();
+        return;
+      }
+
+      typingActive = true;
+      let i = 0;
+      typingTimer = setInterval(() => {
+        i++;
+        textEl.textContent = scene.text.slice(0, i);
+        if (i >= scene.text.length) finishTyping();
+      }, 14);
+    }
+
+    panelEl.addEventListener('click', (e) => {
+      if (typingActive && !e.target.closest('button, a')) {
+        finishTyping();
+      }
+    });
+
+    function render(key) {
+      const scene = scenes[key];
+      activeScene = scene;
+
+      stepLabelEl.textContent = scene.label;
+      iconEl.setAttribute('icon', scene.icon);
+      restartTopBtn.classList.toggle('hidden', key === 'intro');
+      updateTimeline(scene.step);
+      updateStats(scene.stats);
+      updateTone(scene.tone);
+
+      titleEl.textContent = scene.title;
+      titleEl.classList.toggle('text-blue-600', scene.ending === 'good');
+      titleEl.classList.toggle('dark:text-cyan-400', scene.ending === 'good');
+
+      choicesEl.style.transition = 'opacity 0.3s ease';
+      typeText(scene);
+    }
+
+    restartTopBtn.addEventListener('click', () => render('intro'));
+    render('intro');
+  })();
+
+  // ---------- Interactive liquid metaball canvas ----------
+  (function () {
+    const canvas = document.getElementById('networkCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const wrap = canvas.parentElement;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let w = 0, h = 0;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const pointer = { x: 0, y: 0, active: false };
+    let blobs = [];
+    const MAX_BLOBS = 24;
+
+    function accentColor() {
+      const dark = document.documentElement.classList.contains('dark');
+      return dark ? '56,189,248' : '37,99,235';
+    }
+
+    function spawnBlob(x, y) {
+      const r = 9 + Math.random() * 16;
+      return {
+        x: x ?? Math.random() * w,
+        y: y ?? Math.random() * h,
+        baseR: r,
+        r,
+        vx: (Math.random() - 0.5) * 0.55,
+        vy: (Math.random() - 0.5) * 0.55,
+        phase: Math.random() * Math.PI * 2
+      };
+    }
+
+    function resize() {
+      w = wrap.clientWidth;
+      h = wrap.clientHeight;
+      if (w === 0 || h === 0) {
+        window.setTimeout(resize, 50);
+        return;
+      }
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const target = Math.max(10, Math.min(MAX_BLOBS, Math.round((w * h) / 9000)));
+      blobs = Array.from({ length: target }, () => spawnBlob());
+    }
+
+    function pointerFromEvent(e) {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = e.clientX - rect.left;
+      pointer.y = e.clientY - rect.top;
+    }
+
+    canvas.addEventListener('pointermove', (e) => {
+      pointerFromEvent(e);
+      pointer.active = true;
+    });
+    canvas.addEventListener('pointerdown', (e) => {
+      pointerFromEvent(e);
+      pointer.active = true;
+      if (blobs.length < MAX_BLOBS) blobs.push(spawnBlob(pointer.x, pointer.y));
+    });
+    canvas.addEventListener('pointerleave', () => { pointer.active = false; });
+
+    let visible = true;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+      }, { threshold: 0.05 }).observe(wrap);
+    }
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(resize).observe(wrap);
+    } else {
+      window.addEventListener('resize', resize, { passive: true });
+    }
+
+    canvas.style.filter = 'blur(14px) contrast(32)';
+    resize();
+
+    function update(now) {
+      for (const b of blobs) {
+        b.x += b.vx;
+        b.y += b.vy;
+        if (b.x < b.baseR) { b.x = b.baseR; b.vx *= -1; }
+        if (b.x > w - b.baseR) { b.x = w - b.baseR; b.vx *= -1; }
+        if (b.y < b.baseR) { b.y = b.baseR; b.vy *= -1; }
+        if (b.y > h - b.baseR) { b.y = h - b.baseR; b.vy *= -1; }
+
+        if (pointer.active) {
+          const dx = pointer.x - b.x, dy = pointer.y - b.y;
+          const d = Math.hypot(dx, dy);
+          if (d < 150 && d > 0.01) {
+            const f = ((150 - d) / 150) * 0.4;
+            b.x += (dx / d) * f;
+            b.y += (dy / d) * f;
+          }
+        }
+
+        b.r = b.baseR * (1 + Math.sin(now / 650 + b.phase) * 0.14);
+      }
+    }
+
+    function draw(now) {
+      if (w === 0 || h === 0) return;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = `rgb(${accentColor()})`;
+
+      for (const b of blobs) {
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (pointer.active) {
+        ctx.beginPath();
+        ctx.arc(pointer.x, pointer.y, 18, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    if (reduceMotion) {
+      draw(performance.now());
+    } else {
+      (function loop(now) {
+        requestAnimationFrame(loop);
+        if (!visible) return;
+        update(now || performance.now());
+        draw(now || performance.now());
+      })();
+    }
+  })();
+</script>
+</body>
+</html>
