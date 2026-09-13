@@ -47,8 +47,8 @@
 <style>
     :root {
         --bg-body: #f8fafc;
-        --surface: #ffffff;
-        --surface-alt: #f1f5f9;
+        --surface: rgba(255, 255, 255, 0.72);
+        --surface-alt: rgba(241, 245, 249, 0.6);
         --border: rgba(15, 23, 42, 0.10);
         --text-main: #0f172a;
         --text-muted: #56617a;
@@ -62,12 +62,13 @@
         --sim-glow: rgba(37, 99, 235, 0.55);
         --sim-tone-join: rgba(37, 99, 235, 0.35);
         --sim-tone-stay: rgba(100, 116, 139, 0.35);
+        --glass-blur: 18px;
     }
 
     html.dark {
         --bg-body: #05070f;
-        --surface: #0c1226;
-        --surface-alt: #0a0e1f;
+        --surface: rgba(12, 18, 38, 0.55);
+        --surface-alt: rgba(8, 11, 23, 0.55);
         --border: rgba(255, 255, 255, 0.09);
         --text-main: #f1f5f9;
         --text-muted: #94a3b8;
@@ -97,6 +98,23 @@
         background: var(--surface);
         border: 1px solid var(--border);
         box-shadow: var(--shadow);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .section-glass {
+        background: var(--surface-alt);
+        backdrop-filter: blur(26px);
+        -webkit-backdrop-filter: blur(26px);
+    }
+
+    #bgCanvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        display: block;
     }
 
     .site-header {
@@ -109,25 +127,43 @@
     .btn-primary {
         background: #2563eb;
         color: #fff;
-        transition: background-color 0.15s ease, transform 0.15s ease;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 8px 20px -8px rgba(37, 99, 235, 0.55);
+        transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
     }
     .btn-primary:hover {
         background: #1d4ed8;
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 14px 28px -10px rgba(37, 99, 235, 0.65);
+    }
+    .btn-primary:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 4px 10px -6px rgba(37, 99, 235, 0.5);
+    }
+    html.dark .btn-primary {
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 8px 20px -8px rgba(56, 189, 248, 0.45);
+    }
+    html.dark .btn-primary:hover {
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.16) inset, 0 14px 28px -10px rgba(56, 189, 248, 0.55);
     }
 
     .btn-secondary {
         background: transparent;
         border: 1px solid var(--border);
         color: var(--text-main);
-        transition: border-color 0.15s ease, transform 0.15s ease;
+        transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
     }
     .btn-secondary:hover {
         border-color: #2563eb;
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px -12px rgba(15, 23, 42, 0.35);
+    }
+    .btn-secondary:active {
+        transform: translateY(0);
+        box-shadow: none;
     }
     html.dark .btn-secondary:hover {
         border-color: #38bdf8;
+        box-shadow: 0 10px 22px -12px rgba(0, 0, 0, 0.55);
     }
 
     .eyebrow {
@@ -161,21 +197,50 @@
         max-width: 760px;
         height: 60vw;
         max-height: 760px;
-        background: radial-gradient(circle, rgba(37, 99, 235, 0.18) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
         pointer-events: none;
         z-index: 0;
     }
 
-    #networkCanvas {
-        touch-action: none;
-    }
-
     @keyframes subtleFloat {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-6px); }
+        0%, 100% { transform: translate3d(var(--px, 0px), var(--py, 0px), 0px); }
+        50% { transform: translate3d(var(--px, 0px), calc(var(--py, 0px) - 6px), 20px); }
     }
     .anim-float-1 { animation: subtleFloat 6s ease-in-out infinite; }
     .anim-float-2 { animation: subtleFloat 6s ease-in-out infinite 1.2s; }
+
+    @keyframes iconBreathe {
+        0%, 100% { transform: scale(1) rotate(0deg); }
+        50% { transform: scale(1.1) rotate(4deg); }
+    }
+    .icon-pulse { animation: iconBreathe 4.5s ease-in-out infinite; }
+    .icon-pulse:nth-of-type(2) { animation-delay: 0.6s; }
+    @media (prefers-reduced-motion: reduce) {
+        .icon-pulse { animation: none; }
+    }
+
+    .btn-primary, .btn-secondary {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-primary::after, .btn-secondary::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -60%;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+        transform: skewX(-20deg);
+        transition: left 0.55s ease;
+        pointer-events: none;
+    }
+    .btn-secondary::after {
+        background: linear-gradient(115deg, transparent, rgba(37, 99, 235, 0.18), transparent);
+    }
+    .btn-primary:hover::after, .btn-secondary:hover::after {
+        left: 130%;
+    }
 
     @keyframes simStepPulse {
         0%, 100% { box-shadow: 0 0 0 0 var(--sim-glow); }
@@ -190,6 +255,8 @@
 </style>
 </head>
 <body class="min-h-screen selection:bg-blue-500 selection:text-white">
+
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
 
 <header class="site-header sticky top-0 z-50">
   <div class="max-w-6xl mx-auto flex items-center justify-between gap-3 px-5 sm:px-8 lg:px-10 py-4">
@@ -249,7 +316,7 @@
   </div>
 </header>
 
-<main>
+<main class="relative z-10">
 
   <section id="hero" class="relative overflow-hidden">
     <div class="hero-glow" aria-hidden="true"></div>
@@ -292,12 +359,9 @@
       </div>
 
       <div class="lg:col-span-6 relative h-[360px] sm:h-[420px] lg:h-[460px] w-full">
-        <div class="absolute inset-0 rounded-3xl card overflow-hidden">
-          <canvas id="networkCanvas" class="absolute inset-0 w-full h-full" aria-hidden="true"></canvas>
-          <span class="absolute bottom-3 right-4 text-[10px] uppercase tracking-wide font-medium text-slate-400 dark:text-slate-500 pointer-events-none select-none">
-            Pohni myší · klikni
-          </span>
-        </div>
+        <span class="absolute bottom-2 right-2 sm:right-4 text-[10px] uppercase tracking-wide font-medium text-slate-400 dark:text-slate-500 pointer-events-none select-none">
+          Pohni myší · scrolluj
+        </span>
 
         <div class="anim-float-1 hidden sm:flex absolute -top-4 right-2 sm:right-6 card px-4 py-3 rounded-2xl items-center gap-3">
           <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white flex-shrink-0">
@@ -322,7 +386,7 @@
     </div>
   </section>
 
-  <section id="myslenka" class="bg-[var(--surface-alt)] border-t border-[var(--border)]">
+  <section id="myslenka" class="section-glass border-t border-[var(--border)]">
     <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-16 lg:py-24">
       <div class="max-w-2xl mx-auto text-center mb-14">
         <span class="eyebrow mb-4">Cíle platformy</span>
@@ -336,7 +400,7 @@
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div class="card p-7 rounded-2xl">
-          <div class="w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-600/25 text-blue-600 dark:text-cyan-400 flex items-center justify-center mb-5">
+          <div class="icon-pulse w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-600/25 text-blue-600 dark:text-cyan-400 flex items-center justify-center mb-5">
             <iconify-icon icon="solar:square-academic-cap-linear" width="22"></iconify-icon>
           </div>
           <h3 class="text-lg font-bold mb-2.5 tracking-tight">Dostat se na lepší školy</h3>
@@ -346,7 +410,7 @@
         </div>
 
         <div class="card p-7 rounded-2xl">
-          <div class="w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-600/25 text-blue-600 dark:text-cyan-400 flex items-center justify-center mb-5">
+          <div class="icon-pulse w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-600/25 text-blue-600 dark:text-cyan-400 flex items-center justify-center mb-5">
             <iconify-icon icon="solar:chat-round-dots-linear" width="22"></iconify-icon>
           </div>
           <h3 class="text-lg font-bold mb-2.5 tracking-tight">Exkluzivní hosté z byznysu</h3>
@@ -356,7 +420,7 @@
         </div>
 
         <div class="card p-7 rounded-2xl sm:col-span-2 lg:col-span-1">
-          <div class="w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-600/25 text-blue-600 dark:text-cyan-400 flex items-center justify-center mb-5">
+          <div class="icon-pulse w-11 h-11 rounded-xl bg-blue-600/10 border border-blue-600/25 text-blue-600 dark:text-cyan-400 flex items-center justify-center mb-5">
             <iconify-icon icon="solar:users-group-rounded-linear" width="22"></iconify-icon>
           </div>
           <h3 class="text-lg font-bold mb-2.5 tracking-tight">Týmy, které skutečně fungují</h3>
@@ -449,7 +513,7 @@
     </div>
   </section>
 
-  <section id="hoste" class="bg-[var(--surface-alt)] border-t border-[var(--border)]">
+  <section id="hoste" class="section-glass border-t border-[var(--border)]">
     <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 py-16 lg:py-24">
       <div class="max-w-2xl mx-auto text-center mb-12">
         <h2 class="text-3xl sm:text-4xl font-black tracking-tight">
@@ -566,7 +630,7 @@
     </div>
   </section>
 
-  <section id="cta" class="bg-[var(--surface-alt)] border-t border-[var(--border)] text-center">
+  <section id="cta" class="section-glass border-t border-[var(--border)] text-center">
     <div class="max-w-2xl mx-auto px-5 sm:px-8 lg:px-10 py-20">
       <h2 class="text-3xl sm:text-5xl font-black tracking-tight mb-6 leading-tight">
         Kapacita je omezena na
@@ -589,7 +653,7 @@
 
 </main>
 
-<footer class="border-t border-[var(--border)]">
+<footer class="relative z-10 border-t border-[var(--border)]">
   <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6 text-xs text-slate-500 dark:text-slate-400 px-5 sm:px-8 lg:px-10 py-10">
     <div>
       <span class="font-bold text-slate-900 dark:text-white">The Network Říčany</span>
@@ -604,6 +668,7 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script>
   const themeToggleBtn = document.getElementById('themeToggle');
   function updateThemeUI(isDark) {
@@ -824,8 +889,8 @@
     function updateStats(stats) {
       statExpBar.style.width = stats.exp + '%';
       statNetBar.style.width = stats.net + '%';
-      statExpVal.textContent = stats.exp + ' %';
-      statNetVal.textContent = stats.net + ' %';
+      statExpVal.textContent = stats.exp + ' %';
+      statNetVal.textContent = stats.net + ' %';
     }
 
     function updateTone(tone) {
@@ -924,138 +989,421 @@
     render('intro');
   })();
 
-  // ---------- Interactive liquid metaball canvas ----------
+  // ---------- 3D network background + scroll choreography ----------
   (function () {
-    const canvas = document.getElementById('networkCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const wrap = canvas.parentElement;
+    const canvas = document.getElementById('bgCanvas');
+    if (!canvas || typeof THREE === 'undefined') return;
+
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isSmall = window.innerWidth < 768;
 
-    let w = 0, h = 0;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const pointer = { x: 0, y: 0, active: false };
-    let blobs = [];
-    const MAX_BLOBS = 24;
-
-    function accentColor() {
-      const dark = document.documentElement.classList.contains('dark');
-      return dark ? '56,189,248' : '37,99,235';
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+    } catch (e) {
+      renderer = null;
+    }
+    if (!renderer) {
+      canvas.style.display = 'none';
+      return;
     }
 
-    function spawnBlob(x, y) {
-      const r = 9 + Math.random() * 16;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 140);
+
+    function themeColors() {
+      const dark = document.documentElement.classList.contains('dark');
       return {
-        x: x ?? Math.random() * w,
-        y: y ?? Math.random() * h,
-        baseR: r,
-        r,
-        vx: (Math.random() - 0.5) * 0.55,
-        vy: (Math.random() - 0.5) * 0.55,
-        phase: Math.random() * Math.PI * 2
+        bg: dark ? 0x05070f : 0xf8fafc,
+        accent: dark ? [0.22, 0.74, 0.97] : [0.145, 0.388, 0.922]
       };
     }
 
-    function resize() {
-      w = wrap.clientWidth;
-      h = wrap.clientHeight;
-      if (w === 0 || h === 0) {
-        window.setTimeout(resize, 50);
-        return;
-      }
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const target = Math.max(10, Math.min(MAX_BLOBS, Math.round((w * h) / 9000)));
-      blobs = Array.from({ length: target }, () => spawnBlob());
+    let colors = themeColors();
+    scene.fog = new THREE.FogExp2(colors.bg, 0.035);
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isSmall ? 1.5 : 2));
+
+    function resizeRenderer() {
+      const w = window.innerWidth, h = window.innerHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
     }
+    resizeRenderer();
 
-    function pointerFromEvent(e) {
-      const rect = canvas.getBoundingClientRect();
-      pointer.x = e.clientX - rect.left;
-      pointer.y = e.clientY - rect.top;
-    }
+    // ---- Node clusters, one per story beat ----
+    function rand(min, max) { return min + Math.random() * (max - min); }
 
-    canvas.addEventListener('pointermove', (e) => {
-      pointerFromEvent(e);
-      pointer.active = true;
-    });
-    canvas.addEventListener('pointerdown', (e) => {
-      pointerFromEvent(e);
-      pointer.active = true;
-      if (blobs.length < MAX_BLOBS) blobs.push(spawnBlob(pointer.x, pointer.y));
-    });
-    canvas.addEventListener('pointerleave', () => { pointer.active = false; });
+    const clusterDefs = [
+      { id: 'hero', center: [0, 0, 0], count: isSmall ? 26 : 40, spread: [4.5, 3, 3], ring: true, bright: 0.85 },
+      { id: 'myslenka-l', center: [-6, 0, -13], count: isSmall ? 12 : 18, spread: [2, 3, 2], bright: 0.55 },
+      { id: 'myslenka-c', center: [0, 0.5, -13], count: isSmall ? 12 : 18, spread: [2, 3, 2], bright: 0.55 },
+      { id: 'myslenka-r', center: [6, 0, -13], count: isSmall ? 12 : 18, spread: [2, 3, 2], bright: 0.55 },
+      { id: 'partneri', center: [0, 0, -24], count: isSmall ? 18 : 30, spread: [9, 4, 3], bright: 0.4 },
+      { id: 'hoste', center: [0, 0, -34], count: isSmall ? 16 : 24, spread: [3.5, 3.5, 2], ring: true, bright: 0.7 },
+      { id: 'simJoin', center: [-7, -0.5, -45], count: isSmall ? 14 : 22, spread: [2.5, 2.5, 3], bright: 0.6 },
+      { id: 'simStay', center: [7, 0.5, -45], count: isSmall ? 14 : 22, spread: [2.5, 2.5, 3], bright: 0.4 },
+      { id: 'faq', center: [0, 0, -56], count: isSmall ? 10 : 16, spread: [6, 3, 3], bright: 0.35 },
+      { id: 'cta', center: [0, 0, -66], count: isSmall ? 10 : 14, spread: [1.2, 1.2, 1.2], focal: true, bright: 1 }
+    ];
 
-    let visible = true;
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver((entries) => {
-        visible = entries[0].isIntersecting;
-      }, { threshold: 0.05 }).observe(wrap);
-    }
+    const positions = [];
+    const colorArr = [];
+    const clusterNodeIndices = {};
 
-    if ('ResizeObserver' in window) {
-      new ResizeObserver(resize).observe(wrap);
-    } else {
-      window.addEventListener('resize', resize, { passive: true });
-    }
-
-    canvas.style.filter = 'blur(14px) contrast(32)';
-    resize();
-
-    function update(now) {
-      for (const b of blobs) {
-        b.x += b.vx;
-        b.y += b.vy;
-        if (b.x < b.baseR) { b.x = b.baseR; b.vx *= -1; }
-        if (b.x > w - b.baseR) { b.x = w - b.baseR; b.vx *= -1; }
-        if (b.y < b.baseR) { b.y = b.baseR; b.vy *= -1; }
-        if (b.y > h - b.baseR) { b.y = h - b.baseR; b.vy *= -1; }
-
-        if (pointer.active) {
-          const dx = pointer.x - b.x, dy = pointer.y - b.y;
-          const d = Math.hypot(dx, dy);
-          if (d < 150 && d > 0.01) {
-            const f = ((150 - d) / 150) * 0.4;
-            b.x += (dx / d) * f;
-            b.y += (dy / d) * f;
-          }
+    clusterDefs.forEach((def) => {
+      const idxStart = positions.length / 3;
+      const nodeIdx = [];
+      for (let i = 0; i < def.count; i++) {
+        let x, y, z;
+        if (def.ring) {
+          const a = (i / def.count) * Math.PI * 2;
+          const rx = def.spread[0] * (0.7 + Math.random() * 0.3);
+          const rz = def.spread[2] * (0.7 + Math.random() * 0.3);
+          x = def.center[0] + Math.cos(a) * rx;
+          y = def.center[1] + rand(-def.spread[1] * 0.4, def.spread[1] * 0.4);
+          z = def.center[2] + Math.sin(a) * rz;
+        } else {
+          x = def.center[0] + rand(-def.spread[0], def.spread[0]);
+          y = def.center[1] + rand(-def.spread[1], def.spread[1]);
+          z = def.center[2] + rand(-def.spread[2], def.spread[2]);
         }
-
-        b.r = b.baseR * (1 + Math.sin(now / 650 + b.phase) * 0.14);
+        positions.push(x, y, z);
+        const b = def.bright * rand(0.75, 1);
+        colorArr.push(b, b, b);
+        nodeIdx.push(idxStart + i);
       }
+      clusterNodeIndices[def.id] = nodeIdx;
+    });
+
+    const posArray = new Float32Array(positions);
+    const colorArray = new Float32Array(colorArr);
+    const baseColorArray = colorArray.slice();
+    const nodeCount = posArray.length / 3;
+    const twinklePhase = new Float32Array(nodeCount);
+    for (let i = 0; i < nodeCount; i++) twinklePhase[i] = Math.random() * Math.PI * 2;
+
+    const pointsGeo = new THREE.BufferGeometry();
+    pointsGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    pointsGeo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+    function makeDotTexture() {
+      const c = document.createElement('canvas');
+      c.width = c.height = 64;
+      const g = c.getContext('2d');
+      const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, 'rgba(255,255,255,1)');
+      grad.addColorStop(0.4, 'rgba(255,255,255,0.7)');
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = grad;
+      g.fillRect(0, 0, 64, 64);
+      return new THREE.CanvasTexture(c);
     }
 
-    function draw(now) {
-      if (w === 0 || h === 0) return;
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = `rgb(${accentColor()})`;
+    const pointsMat = new THREE.PointsMaterial({
+      size: isSmall ? 0.34 : 0.28,
+      map: makeDotTexture(),
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.95,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    });
+    pointsMat.color = new THREE.Color(colors.accent[0], colors.accent[1], colors.accent[2]);
 
-      for (const b of blobs) {
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
+    const points = new THREE.Points(pointsGeo, pointsMat);
+    scene.add(points);
 
-      if (pointer.active) {
-        ctx.beginPath();
-        ctx.arc(pointer.x, pointer.y, 18, 0, Math.PI * 2);
-        ctx.fill();
-      }
+    // ---- Nearest-neighbour edges within each cluster ----
+    const edgePositions = [];
+    function distSq(ax, ay, az, bx, by, bz) {
+      const dx = ax - bx, dy = ay - by, dz = az - bz;
+      return dx * dx + dy * dy + dz * dz;
     }
+    Object.values(clusterNodeIndices).forEach((indices) => {
+      indices.forEach((i) => {
+        const ax = posArray[i * 3], ay = posArray[i * 3 + 1], az = posArray[i * 3 + 2];
+        const nearest = indices
+          .filter((j) => j !== i)
+          .map((j) => ({ j, d: distSq(ax, ay, az, posArray[j * 3], posArray[j * 3 + 1], posArray[j * 3 + 2]) }))
+          .sort((a, b) => a.d - b.d)
+          .slice(0, 2);
+        nearest.forEach(({ j }) => {
+          edgePositions.push(ax, ay, az, posArray[j * 3], posArray[j * 3 + 1], posArray[j * 3 + 2]);
+        });
+      });
+    });
+
+    const edgeGeo = new THREE.BufferGeometry();
+    edgeGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(edgePositions), 3));
+    const edgeMat = new THREE.LineBasicMaterial({
+      color: new THREE.Color(colors.accent[0], colors.accent[1], colors.accent[2]),
+      transparent: true,
+      opacity: 0.18,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    const edges = new THREE.LineSegments(edgeGeo, edgeMat);
+    scene.add(edges);
+
+    // ---- Focal 3D objects: a rotating wireframe at the hero, a pulsing core at the CTA ----
+    const heroWireMat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(colors.accent[0], colors.accent[1], colors.accent[2]),
+      wireframe: true,
+      transparent: true,
+      opacity: 0.35
+    });
+    const heroWire = new THREE.Mesh(new THREE.IcosahedronGeometry(isSmall ? 1.7 : 2.2, 1), heroWireMat);
+    heroWire.position.set(0, 0, 0);
+    scene.add(heroWire);
+
+    const coreMat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(colors.accent[0], colors.accent[1], colors.accent[2]),
+      transparent: true,
+      opacity: 0.9
+    });
+    const coreMesh = new THREE.Mesh(new THREE.SphereGeometry(0.6, 24, 24), coreMat);
+    coreMesh.position.set(0, 0, -66);
+    scene.add(coreMesh);
+
+    function applyThemeColors() {
+      colors = themeColors();
+      scene.fog.color.setHex(colors.bg);
+      pointsMat.color.setRGB(colors.accent[0], colors.accent[1], colors.accent[2]);
+      edgeMat.color.setRGB(colors.accent[0], colors.accent[1], colors.accent[2]);
+      heroWireMat.color.setRGB(colors.accent[0], colors.accent[1], colors.accent[2]);
+      coreMat.color.setRGB(colors.accent[0], colors.accent[1], colors.accent[2]);
+    }
+
+    // ---- Scroll-driven camera choreography, one keyframe per section ----
+    const SECTION_KEYFRAMES = [
+      { id: 'hero', pos: [0, 0, 6], look: [0, 0, 0] },
+      { id: 'myslenka', pos: [0, 0.6, -6], look: [0, 0, -13] },
+      { id: 'partneri', pos: [1.5, 0, -19], look: [0, 0, -24] },
+      { id: 'hoste', pos: [-1.5, 0.4, -29], look: [0, 0, -34] },
+      { id: 'simulator', pos: [0, 0.2, -39], look: [0, 0, -45] },
+      { id: 'faq', pos: [0, 0, -51], look: [0, 0, -56] },
+      { id: 'cta', pos: [0, 0, -61], look: [0, 0, -66] }
+    ];
+
+    let keyframes = [];
+    function computeKeyframeFractions() {
+      const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const base = SECTION_KEYFRAMES.map((k) => {
+        const el = document.getElementById(k.id);
+        const top = el ? el.offsetTop : 0;
+        return { frac: Math.min(1, top / scrollable), pos: k.pos, look: k.look };
+      });
+      const last = SECTION_KEYFRAMES[SECTION_KEYFRAMES.length - 1];
+      base.push({
+        frac: 1,
+        pos: [last.pos[0], last.pos[1], last.pos[2] - 5],
+        look: last.look
+      });
+      keyframes = base;
+    }
+    computeKeyframeFractions();
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function smoothstep(t) { return t * t * (3 - 2 * t); }
+
+    function cameraFor(frac) {
+      if (frac <= keyframes[0].frac) return { pos: keyframes[0].pos, look: keyframes[0].look };
+      const lastKf = keyframes[keyframes.length - 1];
+      if (frac >= lastKf.frac) return { pos: lastKf.pos, look: lastKf.look };
+
+      let a = keyframes[0], b = lastKf;
+      for (let i = 0; i < keyframes.length - 1; i++) {
+        if (frac >= keyframes[i].frac && frac <= keyframes[i + 1].frac) {
+          a = keyframes[i]; b = keyframes[i + 1];
+          break;
+        }
+      }
+      const span = Math.max(0.0001, b.frac - a.frac);
+      const t = smoothstep(Math.min(1, Math.max(0, (frac - a.frac) / span)));
+      return {
+        pos: [0, 1, 2].map((i) => lerp(a.pos[i], b.pos[i], t)),
+        look: [0, 1, 2].map((i) => lerp(a.look[i], b.look[i], t))
+      };
+    }
+
+    let targetFrac = 0;
+    let currentFrac = 0;
+    function updateScrollFrac() {
+      const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      targetFrac = Math.min(1, Math.max(0, window.scrollY / scrollable));
+    }
+    window.addEventListener('scroll', updateScrollFrac, { passive: true });
+    updateScrollFrac();
+
+    const pointer = { x: 0, y: 0 };
+    window.addEventListener('pointermove', (e) => {
+      pointer.x = (e.clientX / window.innerWidth - 0.5) * 2;
+      pointer.y = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      resizeRenderer();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(computeKeyframeFractions, 150);
+    }, { passive: true });
+    window.addEventListener('load', () => setTimeout(computeKeyframeFractions, 200));
+
+    if (themeToggleBtn) themeToggleBtn.addEventListener('click', () => setTimeout(applyThemeColors, 0));
+
+    let paused = document.visibilityState === 'hidden';
+    document.addEventListener('visibilitychange', () => { paused = document.visibilityState === 'hidden'; });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (paused) return;
+
+      currentFrac = reduceMotion ? targetFrac : lerp(currentFrac, targetFrac, 0.07);
+      const cam = cameraFor(currentFrac);
+
+      const px = reduceMotion ? 0 : pointer.x * 0.35;
+      const py = reduceMotion ? 0 : -pointer.y * 0.2;
+      const now = performance.now();
+      const idleX = reduceMotion ? 0 : Math.sin(now * 0.00018) * 0.25;
+      const idleY = reduceMotion ? 0 : Math.cos(now * 0.00013) * 0.15;
+
+      camera.position.set(cam.pos[0] + px + idleX, cam.pos[1] + py + idleY, cam.pos[2]);
+      camera.lookAt(cam.look[0] + px * 0.6 + idleX * 0.6, cam.look[1] + py * 0.6 + idleY * 0.6, cam.look[2]);
+
+      if (!reduceMotion) {
+        const t = now * 0.00006;
+        points.rotation.y = Math.sin(t) * 0.035;
+        edges.rotation.y = points.rotation.y;
+        edgeMat.opacity = 0.18 + Math.sin(now * 0.0009) * 0.05;
+
+        heroWire.rotation.x += 0.0016;
+        heroWire.rotation.y += 0.0024;
+        coreMesh.scale.setScalar(1 + Math.sin(now * 0.002) * 0.18);
+        coreMesh.rotation.y += 0.004;
+
+        const tw = now * 0.0016;
+        const colAttr = pointsGeo.attributes.color;
+        for (let i = 0; i < nodeCount; i++) {
+          const flicker = 0.65 + 0.35 * Math.sin(tw + twinklePhase[i]);
+          const v = baseColorArray[i * 3] * flicker;
+          colorArray[i * 3] = v;
+          colorArray[i * 3 + 1] = v;
+          colorArray[i * 3 + 2] = v;
+        }
+        colAttr.needsUpdate = true;
+      }
+
+      renderer.render(scene, camera);
+    }
+    animate();
+  })();
+
+  // ---------- 3D tilt + scroll-in reveal for content cards ----------
+  (function () {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    const cardEls = Array.from(document.querySelectorAll('.card:not(.anim-float-1):not(.anim-float-2)'));
+    const revealTargets = cardEls.concat(Array.from(document.querySelectorAll('main h2, #simCard')));
 
     if (reduceMotion) {
-      draw(performance.now());
+      // No entrance animation, no tilt — content is simply visible.
     } else {
-      (function loop(now) {
-        requestAnimationFrame(loop);
-        if (!visible) return;
-        update(now || performance.now());
-        draw(now || performance.now());
-      })();
+      revealTargets.forEach((el, i) => {
+        const swing = i % 2 === 0 ? 10 : -10;
+        el.style.opacity = '0';
+        el.style.transform = `perspective(1000px) rotateX(14deg) rotateY(${swing}deg) translateY(30px) translateZ(-40px)`;
+        el.style.transition = 'opacity 0.75s cubic-bezier(.22,1,.36,1), transform 0.75s cubic-bezier(.22,1,.36,1)';
+        el.style.willChange = 'opacity, transform';
+      });
+
+      const revealEl = (el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+        el.addEventListener('transitionend', function handler() {
+          el.style.transition = '';
+          el.style.willChange = '';
+          el.removeEventListener('transitionend', handler);
+        });
+      };
+
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              revealEl(entry.target);
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+        revealTargets.forEach((el) => io.observe(el));
+      } else {
+        revealTargets.forEach(revealEl);
+      }
+
+      if (canHover) {
+        cardEls.forEach((card) => {
+          card.style.transformStyle = 'preserve-3d';
+          card.addEventListener('mousemove', (e) => {
+            const r = card.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            card.style.transform = `perspective(800px) rotateX(${(-py * 13).toFixed(2)}deg) rotateY(${(px * 13).toFixed(2)}deg) translateZ(18px) scale(1.02)`;
+          });
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+          });
+        });
+      }
     }
+  })();
+
+  // ---------- Layered mouse-parallax for the hero's floating elements ----------
+  (function () {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (reduceMotion || !canHover) return;
+
+    const heroSection = document.getElementById('hero');
+    if (!heroSection) return;
+
+    const layers = [
+      { el: heroSection.querySelector('.anim-float-1'), depth: 26, mode: 'var' },
+      { el: heroSection.querySelector('.anim-float-2'), depth: 18, mode: 'var' },
+      { el: heroSection.querySelector('h1'), depth: 6, mode: 'transform' }
+    ].filter((l) => l.el);
+
+    let raf = null;
+    heroSection.addEventListener('mousemove', (e) => {
+      const rect = heroSection.getBoundingClientRect();
+      const nx = (e.clientX - rect.left) / rect.width - 0.5;
+      const ny = (e.clientY - rect.top) / rect.height - 0.5;
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        layers.forEach(({ el, depth, mode }) => {
+          const x = (nx * depth).toFixed(1), y = (ny * depth * 0.6).toFixed(1);
+          if (mode === 'var') {
+            el.style.setProperty('--px', x + 'px');
+            el.style.setProperty('--py', y + 'px');
+          } else {
+            el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+          }
+        });
+        raf = null;
+      });
+    });
+    heroSection.addEventListener('mouseleave', () => {
+      layers.forEach(({ el, mode }) => {
+        if (mode === 'var') {
+          el.style.setProperty('--px', '0px');
+          el.style.setProperty('--py', '0px');
+        } else {
+          el.style.transform = '';
+        }
+      });
+    });
   })();
 </script>
 </body>
